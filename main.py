@@ -9,6 +9,7 @@ import requests
 import matplotlib.pyplot as plt
 import numpy as np
 import threading
+from colorama import Fore, Back, Style
 
 data = []
 
@@ -17,10 +18,10 @@ def function(range1, range2, thread):
         r = requests.get(f'https://instalogik.pl/handlers/get_tasks_review_from_stage.php?user_id={i}&stage_id=34')
         body = r.json()
         try:
-            if body['data']['4']['tasks']['1']['solution'] != 'i_len=0':
-                data.append(body['data']['4']['tasks']['1']['solution']) # need to change first numer afther 'data' if you want to change question
+            if body['data']['1']['tasks']['1']['solution'] != 'i_len=0':
+                data.append(body['data']['1']['tasks']['1']['solution']) # need to change first numer after 'data' if you want to change question
         except:
-            print(f'{i}: error')
+            print(f'{Fore.YELLOW}[WARN]{Fore.WHITE}: failed to fetch {i}')
 
 x = threading.Thread(target=function, args=(20000, 21000, 1)) # so many threads, but it's still proof of concept
 x.start()
@@ -40,8 +41,10 @@ z2.start()
 x.join()
 values, counts = np.unique(data, return_counts=True)
 
-plt.bar(counts, counts, tick_label = values,
-        width = 0.8, color = ['red', 'green'])
+print(f'{Fore.GREEN}Finished!')
+
+plt.bar(counts, counts, tick_label = values, # for assembly (open) questions insert counts instead of [0,1,2] 
+        width = 1, color = ['green']) # for assembly questions you can use higher width
 
 plt.xlabel('odpowiedź')
         # naming the y-axis
